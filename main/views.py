@@ -11,14 +11,7 @@ from rest_framework.generics import ListAPIView , RetrieveAPIView , CreateAPIVie
 
 
 class QuestionCreateAPIView(APIView):
-    def get(self, request):
-        return Response({
-            'status':False,
-            'status_code':status.HTTP_405_METHOD_NOT_ALLOWED,
-            'message':'GET method uchun ruhsat berilmagan!',
-            'data':None,
-            'timestamp':datetime.datetime.now()
-        })
+    http_method_names = ['post']
     def post(self, request):
         serializer = QuestionFormSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -30,7 +23,9 @@ class QuestionCreateAPIView(APIView):
                 'timestamp':datetime.datetime.now()
             })
 
+
 class QuestionListAPIView(APIView):
+    http_method_names = ['get']
     def get(self, request):
         questions = Question.objects.all()
         serializer = QuestionListSerializer(questions, many=True)
@@ -42,38 +37,86 @@ class QuestionListAPIView(APIView):
             'timestamp':datetime.datetime.now()
         })
 
-
-# class QuestionDetailAPIView(APIView):
-#     def get(self, request, pk=None):
-#         if not pk:
-#             return Response({
-#                 'status':False,
-#                 'status_code':status.HTTP_400_BAD_REQUEST,
-#                 'message':'Savol idni kiriting!',
-#                 'data':None,
-#                 'timestamp':datetime.datetime.now()
-#             })
-#
-#         question = Question.objects.filter(id=pk).first()
-#         if not question:
-#             return Response({
-#                 'status':False,
-#                 'status_code':status.HTTP_404_NOT_FOUND,
-#                 'message':'Savol topilmadi!',
-#                 'data':None,
-#                 'timestamp':datetime.datetime.now()
-#             })
-#
-#         serializer = QuestionDetailSerializer(question)
-#         return Response({
-#             'status':True,
-#             'status_code':status.HTTP_200_OK,
-#             'message':'Savol haqida maʼlumot',
-#             'data':serializer.data,
-#             'timestamp':datetime.datetime.now()
-#         })
+class QuestionDetailAPIView(APIView):
+    http_method_names = ['get']
+    def get(self,request, pk):
+        if not pk:
+            return Response({
+                'status':False,
+                'status_code':status.HTTP_400_BAD_REQUEST,
+                'message':"ID xato formatda kirtildi!",
+                'timestamp':datetime.datetime.now()
+            })
+        if  not Question.objects.filter(id=pk).exists():
+            return Response({
+                'status':False,
+                'status_code':status.HTTP_404_NOT_FOUND,
+                'message':"Bunday ID ga mos savol topilmadi!",
+                'timestamp':datetime.datetime.now()
+            })
+        question = Question.objects.filter(id=pk).first()
+        serializer = QuestionDetailSerializer(question)
+        return Response({
+            'status':True,
+            'status_code':status.HTTP_200_OK,
+            'message':'Savol Malumotlari muvaffaqiyatli olindi!',
+            'data':serializer.data,
+            'timestamp':datetime.datetime.now()
+        })
 
 
-class QuestiondDetail(RetrieveAPIView):
-    queryset = Question.objects.all()
-    serializer_class = QuestionDetailSerializer
+class ContactAPIView(APIView):
+    http_method_names = ['get']
+    def get(self, request):
+        contacts = Contact.objects.all()
+        serializer = ContactSerializer(contacts, many=True)
+        return Response({
+            'status':True,
+            'status_code':status.HTTP_200_OK,
+            'message':"Kontaktlar ro'yxati",
+            'data':serializer.data,
+            'timestamp':datetime.datetime.now()
+        })
+
+
+class AboutAPIView(APIView):
+    http_method_names = ['get']
+    def get(self, request):
+        abouts = About.objects.all()
+        serializer = AboutSerializer(abouts, many=True)
+        return Response({
+            'status':True,
+            'status_code':status.HTTP_200_OK,
+            'message':"O'zim haqimda malumotlar",
+            'data':serializer.data,
+            'timestamp':datetime.datetime.now()
+        })
+
+class AchievementsAPIView(APIView):
+    http_method_names = ['get']
+    def get(self, request):
+        achievements = Achievements.objects.all()
+        serializer = AchievementsSerializer(achievements, many=True)
+        return Response({
+            'status':True,
+            'status_code':status.HTTP_200_OK,
+            'message':"Muvaffaqiyatlar ro'yxati",
+            'data':serializer.data,
+            'timestamp':datetime.datetime.now()
+        })
+
+class GalleryAPIView(APIView):
+    http_method_names = ['get']
+    def get(self, request):
+        galleries = Gallery.objects.all()
+        serializer = GallerySerializer(galleries, many=True)
+        return Response({
+            'status':True,
+            'status_code':status.HTTP_200_OK,
+            'message':"Galereya & Rasmlar",
+            'data':serializer.data,
+            'timestamp':datetime.datetime.now()
+        })
+
+
+
