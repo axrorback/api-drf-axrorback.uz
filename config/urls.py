@@ -16,8 +16,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path , include
+from django.http import JsonResponse
+import datetime
+
+
+def notfound(request , exception):
+    return JsonResponse({
+        "status":False,
+        "status_code":404,
+        "message":"URL not found or changed!",
+        "path":request.path,
+        "timestamp":datetime.datetime.now(),
+    })
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('main.urls'))
 ]
+
+handler404 = notfound

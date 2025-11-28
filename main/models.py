@@ -1,7 +1,6 @@
 from django.db import models
 import uuid
 import os
-import datetime
 from django.contrib.auth.models import AbstractUser
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

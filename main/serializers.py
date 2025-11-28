@@ -20,3 +20,12 @@ class QuestionFormSerializer(serializers.ModelSerializer):
 
 
 
+class QuestionListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = ['id','name','question']
+
+class QuestionDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = ['id','name','question','answer','answered_at','answered_by']
